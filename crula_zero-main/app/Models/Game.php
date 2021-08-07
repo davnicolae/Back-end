@@ -18,7 +18,7 @@ class Game extends Model
     // 
 
 // permite popularea culoanelor din tabelul game
-    protected $fillable= ['name', 'price'];
+    protected $fillable= ['name', 'price','gen'];
     // o propietate in oop
     // da-mi voie sa completa in coloana name si price 
     // sau nu ii voie... 

@@ -31,6 +31,9 @@
               <label for="cases">Game Price :</label>
               <input type="text" class="form-control" name="price" value="{{ $game->price }}"/>
           </div>
+          <div class="form-group">
+                <label for="cases">Gen :</label>
+                <input type="text" class="form-control" name="gen"/>
           <button type="submit" class="btn btn-primary">Update Data</button>
       </form>
   </div>

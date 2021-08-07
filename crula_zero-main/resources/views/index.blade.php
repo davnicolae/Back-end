@@ -18,6 +18,7 @@
           <td>ID</td>
           <td>Game Name</td>
           <td>Game Price</td>
+          <td>Gen</td>
           <td colspan="2">Action</td>
         </tr>
     </thead>
@@ -27,6 +28,7 @@
             <td>{{$game->id}}</td>
             <td>{{$game->name}}</td>
             <td>{{$game->price}}</td>
+            <td>{{$game->gen}}</td>
             <td><a href="{{ route('games.edit', $game->id)}}" class="btn btn-primary">Edit</a></td>
             <td>
                 <form action="{{ route('games.destroy', $game->id)}}" method="post">

@@ -73,7 +73,9 @@ class GameController extends Controller
               [
             'name' => 'required|max:255',
             'price' => 'required',
+            'gen'   => 'required',
         ]);
+
 // am atribuite clasa game, care este un model 
 // iar modelului atribuit actiunea de crearea 
 
@@ -128,7 +130,8 @@ class GameController extends Controller
         $validatedData = $request
         ->validate([
             'name' => 'required|max:255',
-            'price' => 'required'
+            'price' => 'required',
+            'gen'   => 'required',
         ]);
         // cauta jocul ce are in interorul sau id -ul respectiva ,daca are
         // actualizeaza cu urmatoarele valori
