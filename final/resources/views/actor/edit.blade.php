@@ -2,38 +2,56 @@
 
 @section('content')
 
-<ul class="nav nav-tabs">
- <li class="inactive">
-  <a href="/movie">Movies</a>
- </li>
- <li class="inactive">
-  <a href="/actor">Actors</a>
- </li>
-</ul>
-
-<div class="row">
- <div class="col-md-12">
-  <br />
-  @if(count($errors) > 0)
-  <div class="alert alert-danger">
-         <ul>
-         @foreach($errors->all() as $error)
-          <li>{{$error}}</li>
-         @endforeach
-         </ul>
-  @endif
-
-  <form method="post" action="{{route('actor.update', $id)}}">
-   {{csrf_field()}}
-   <input type="hidden" name="_method" value="PATCH" />
-   <div class="form-group">
-    <input type="text" name="name" class="form-control" value="{{$actor->name}}" placeholder="Enter Title" />
-   </div>
-   <div class="form-group">
-    <input type="submit" class="btn btn-primary" value="Edit" />
-   </div>
-  </form>
- </div>
-</div>
-
+    <div class="row">
+        <div class="col-lg-12 margin-tb">
+            <div class="pull-left">
+                <h2>Edit Actor</h2>
+            </div>
+            <div class="pull-right">
+                <a class="btn btn-primary" href="{{ route('actor.index') }}"> Back</a>
+            </div>
+        </div>
+    </div>
+     
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <strong>Whoops!</strong> There were some problems with your input.<br><br>
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+    
+    <form action="{{ route('actor.update',$actor->id) }}" method="POST" enctype="multipart/form-data"> 
+        @csrf
+        @method('PUT')
+     
+         <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="form-group">
+                    <strong>Name:</strong>
+                    <input type="text" name="name" value="{{ $actor->name }}" class="form-control" placeholder="Name">
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="form-group">
+                    <strong>Detail:</strong>
+                    <textarea class="form-control" style="height:150px" name="detail" placeholder="Detail">{{ $actor->detail }}</textarea>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="form-group">
+                    <strong>Image:</strong>
+                    <input type="file" name="image" class="form-control" placeholder="image">
+                    <img src="/image/{{ $actor->image }}" width="300px">
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+     
+    </form>
 @endsection

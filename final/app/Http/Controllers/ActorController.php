@@ -15,8 +15,10 @@ class ActorController extends Controller
     public function index()
     {
         // dd("hello");
-        $actors = Actor::all()->toArray();
-        return view('actor.index', compact('actors'));
+        $actors = Actor::latest()->paginate(5);
+
+        return view('actor.index', compact('actors'))
+             ->with('i', (request()->input('page',1) -1) *5);
     }
 
     /**
@@ -38,13 +40,20 @@ class ActorController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'name'  =>  'required'
+        $request->validate ([
+            'name'   =>  'required',
+            'detail' =>  'required',
+            'image'   =>  'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
-        $actor = new Actor([
-            'name'  =>  $request->get('name')
-        ]);
-        $actor->save();
+        $input = $request->all();
+        if ($image = $request->file('image'))  {
+            $destinationPath = 'image/';
+            $profileImage = date('YmdHis') . "." . $image->getClientOriginalExtension();
+            $image->move($destinationPath, $profileImage);
+            $input['image'] = "$profileImage";
+        }
+        Actor::create($input);
+
         return redirect()->route('actor.index')->with('success', 'Actor Added');
     }
 
@@ -54,8 +63,9 @@ class ActorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Actor $actor)
     {
+        return view('actor.show', compact('actor'));
         //
     }
 
@@ -65,11 +75,12 @@ class ActorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Actor $actor)
     {
        
-        $actor = Actor::find($id);
-        return view('actor.edit', compact('actor', 'id'));
+        // $actor = Actor::find($id);
+        // return view('actor.edit', compact('actor', 'id'));
+        return view('actor.edit', compact('actor'));
     }
 
     /**
@@ -79,14 +90,26 @@ class ActorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Actor $actor)
     {
-        $this->validate($request, [
-            'name'  =>  'required'
-        ]);
-        $actor = Actor::find($id);
-        $actor->name = $request->get('name');
-        $actor->save();
+       $request->validate([
+           'name'   => 'required',
+           'detail' => 'required'
+       ]);
+
+       $input = $request->all();
+
+       if ($image = $request->file('image')) {
+           $destinationPath = 'Image/';
+           $profileImage =date('YmdHis') . "." . $image->getClientOriginalExtension();
+           $image->move($destinationPath, $profileImage);
+           $input['image'] = "$profileImage";
+       }else{
+           unset($input['image']);
+       }
+
+       $actor->update($input);
+
         return redirect()->route('actor.index')->with('success', 'Actor Updated');
     }
 
@@ -96,11 +119,11 @@ class ActorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Actor $actor)
     {
-        $actor = Actor::find($id);
-        $actor->movies()->detach();
         $actor->delete();
-        return redirect()->route('actor.index')->with('success', 'Actor Deleted');
+
+        return redirect()->route('actor.index')
+                        ->with('succes','Actor deleted');
     }
 }
